@@ -22,9 +22,9 @@ if [ -z "${CUR_V}" ]; then
   DL_URL="$(wget -qO- https://api.github.com/repos/BeamMP/BeamMP-Server/releases | jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name==$LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string')"
   cd ${DATA_DIR}
   if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/BeamMP-Server "${DL_URL}" ; then
-    echo "---Sucessfully downloaded BeamNG-MP-Server---"
+    echo "---Sucessfully downloaded BeamNG-MP-Server ${LAT_V}---"
   else
-    echo "---Something went wrong, can't download BeamNG-MP-Server, putting container in sleep mode---"
+    echo "---Something went wrong, can't download BeamNG-MP-Server ${LAT_V}, putting container in sleep mode---"
     sleep infinity
   fi
   chmod +x ${DATA_DIR}/BeamMP-Server
@@ -36,9 +36,9 @@ elif [ "${CUR_V}" != "${LAT_V}" ]; then
   DL_URL="$(wget -qO- https://api.github.com/repos/BeamMP/BeamMP-Server/releases | jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name==$LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string')"
   cd ${DATA_DIR}
   if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/BeamMP-Server "${DL_URL}" ; then
-    echo "---Sucessfully downloaded BeamNG-MP-Server---"
+    echo "---Sucessfully downloaded BeamNG-MP-Server ${LAT_V}---"
   else
-    echo "---Something went wrong, can't download BeamNG-MP-Server, putting container in sleep mode---"
+    echo "---Something went wrong, can't download BeamNG-MP-Server ${LAT_V}, putting container in sleep mode---"
     sleep infinity
   fi
   chmod +x ${DATA_DIR}/BeamMP-Server
