@@ -1,7 +1,7 @@
 FROM ich777/debian-baseimage
 
 LABEL org.opencontainers.image.authors="admin@minenet.at"
-LABEL org.opencontainers.image.source="https://github.com/ich777/docker-steamcmd-server"
+LABEL org.opencontainers.image.source="https://github.com/ich777/docker-beamng-mp-server"
 
 RUN apt-get update && \
 	apt-get -y install --no-install-recommends wget && \
