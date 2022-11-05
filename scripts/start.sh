@@ -24,7 +24,9 @@ chmod -R 750 /opt/scripts
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
-	#TBD
+	kill -SIGKILL $(pidof BeamMP-Server)
+	tail --pid=$(pidof BeamMP-Server) -f 2>/dev/null
+	sleep 0.5
 	exit 143;
 }
 
