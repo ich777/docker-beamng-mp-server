@@ -23,7 +23,7 @@ docker run --name BeamNG-MP -d \
 	-p 30814:30814 -p 30814:30814/udp -p 8080:8080 \
 	--env 'UID=99' \
 	--env 'GID=100' \
-    --env 'UMASK=0000' \
+	--env 'UMASK=0000' \
 	--volume /path/to/beamngmp:/beamngmp \
 	ich777/beamng-mp-server:latest
 ```
