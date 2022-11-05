@@ -9,6 +9,7 @@ RUN apt-get update && \
 
 ENV DATA_DIR="/beamngmp"
 ENV GAME_PARAMS=""
+ENV PRERELEASE="false"
 ENV UMASK=000
 ENV UID=99
 ENV GID=100
