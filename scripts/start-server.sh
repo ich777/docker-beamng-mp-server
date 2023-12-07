@@ -30,9 +30,9 @@ if [ -z "${CUR_V}" ]; then
   chmod +x ${DATA_DIR}/BeamMP-Server
   touch ${DATA_DIR}/beamngmp_${LAT_V}
 elif [ "${CUR_V}" != "${LAT_V}" ]; then
-  echo "---Version missmatch, installed v${CUR_V}, downloading and installing latest v${LAT_V}...---"
+  echo "---Version missmatch, installed ${CUR_V}, downloading and installing latest ${LAT_V}...---"
   cd ${DATA_DIR}
-  rm -rf ${DATA_DIR}/beamngmp_v*
+  rm -rf ${DATA_DIR}/beamngmp_v* ${DATA_DIR}/BeamMP-Server
   DL_URL="$(wget -qO- https://api.github.com/repos/BeamMP/BeamMP-Server/releases | jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name==$LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string')"
   cd ${DATA_DIR}
   if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/BeamMP-Server "${DL_URL}" ; then
@@ -44,7 +44,7 @@ elif [ "${CUR_V}" != "${LAT_V}" ]; then
   chmod +x ${DATA_DIR}/BeamMP-Server
   touch ${DATA_DIR}/beamngmp_${LAT_V}
 elif [ "${CUR_V}" == "${LAT_V}" ]; then
-	echo "---BeamNG-MP-Server v$CUR_V up-to-date---"
+	echo "---BeamNG-MP-Server $CUR_V up-to-date---"
 fi
 
 echo "---Prepare Server---"
