@@ -19,7 +19,10 @@ fi
 echo "---Version Check---"
 if [ -z "${CUR_V}" ]; then
   echo "---BeamNG-MP-Server not installed, installing...---"
-  DL_URL="$(wget -qO- https://api.github.com/repos/BeamMP/BeamMP-Server/releases | jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name==$LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string')"
+  DL_URL="$(wget -qO- https://api.github.com/repos/BeamMP/BeamMP-Server/releases | jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name == 
+$LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-linux*$") | .string' || jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name =
+= $LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string'
+https://github.com/BeamMP/BeamMP-Server/releases/download/v3.2.2/BeamMP-Server-linux)"
   cd ${DATA_DIR}
   if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/BeamMP-Server "${DL_URL}" ; then
     echo "---Sucessfully downloaded BeamNG-MP-Server ${LAT_V}---"
@@ -33,7 +36,10 @@ elif [ "${CUR_V}" != "${LAT_V}" ]; then
   echo "---Version missmatch, installed ${CUR_V}, downloading and installing latest ${LAT_V}...---"
   cd ${DATA_DIR}
   rm -rf ${DATA_DIR}/beamngmp_v* ${DATA_DIR}/BeamMP-Server
-  DL_URL="$(wget -qO- https://api.github.com/repos/BeamMP/BeamMP-Server/releases | jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name==$LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string')"
+  DL_URL="$(wget -qO- https://api.github.com/repos/BeamMP/BeamMP-Server/releases | jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name == 
+$LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-linux*$") | .string' || jq -r --arg LAT_V "$LAT_V" '.[] | select(.tag_name =
+= $LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string'
+https://github.com/BeamMP/BeamMP-Server/releases/download/v3.2.2/BeamMP-Server-linux)"
   cd ${DATA_DIR}
   if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/BeamMP-Server "${DL_URL}" ; then
     echo "---Sucessfully downloaded BeamNG-MP-Server ${LAT_V}---"
