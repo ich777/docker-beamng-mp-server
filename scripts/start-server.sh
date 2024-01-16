@@ -24,7 +24,7 @@ $LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-linux*$") 
 = $LAT_V) | .assets[] | .browser_download_url | match("^.*BeamMP-Server-debian.*$") | .string'
 https://github.com/BeamMP/BeamMP-Server/releases/download/v3.2.2/BeamMP-Server-linux)"
   cd ${DATA_DIR}
-  rm -rf ${DATA_DIR}/BeamMP-Server
+  rm -rf ${DATA_DIR}/BeamMP-Server 2>/dev/null
   if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/BeamMP-Server "${DL_URL}" ; then
     echo "---Sucessfully downloaded BeamNG-MP-Server ${LAT_V}---"
   else
