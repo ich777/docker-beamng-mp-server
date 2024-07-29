@@ -9,10 +9,10 @@ CUR_V="$(find ${DATA_DIR} -maxdepth 1 -type f -name "beamngmp_v*" 2>/dev/null | 
 if [ -z "${LAT_V}" ]; then
   if [ -z "${CUR_V}" ]; then
     echo "---Can't get latest version from BeamNG-MP-Server and found no local installed version!---"
-	sleep infinity
+        sleep infinity
   else
     echo "---Can't get latest version from BeamNG-MP-Server, falling back to installed version ${CUR_V}---"
-	LAT_V="${CUR_V}"
+        LAT_V="${CUR_V}"
   fi
 fi
 
@@ -45,10 +45,16 @@ elif [ "${CUR_V}" != "${LAT_V}" ]; then
   chmod +x ${DATA_DIR}/BeamMP-Server
   touch ${DATA_DIR}/beamngmp_${LAT_V}
 elif [ "${CUR_V}" == "${LAT_V}" ]; then
-	echo "---BeamNG-MP-Server $CUR_V up-to-date---"
+        echo "---BeamNG-MP-Server $CUR_V up-to-date---"
 fi
 
 echo "---Prepare Server---"
+if [ ! -f ~/.tmux.conf ]; then
+  echo "set-option -g status off
+set-option -g display-time 5000
+unbind -n C-c
+bind-key -n C-c display-message 'Blocked. Please use to command \"exit\" to shutdown the server or close this window to exit the terminal.'" > ~/.tmux.conf
+fi
 if [ ! -f "${DATA_DIR}/ServerConfig.toml" ]; then
   echo "---No ServerConfig.toml found, copying...---"
   cp -f /opt/config/ServerConfig.toml ${DATA_DIR}
@@ -56,5 +62,19 @@ fi
 chmod -R ${DATA_PERM} ${DATA_DIR}
 
 echo "---Start Server---"
+if [ "${ENABLE_WEBCONSOLE}" == "true" ]; then
+    /opt/scripts/start-gotty.sh 2>/dev/null &
+fi
 cd ${DATA_DIR}
-${DATA_DIR}/BeamMP-Server ${GAME_PARAMS}
+if [ ! -f ${DATA_DIR}/BeamMP-Server ]; then
+  echo "---Something went wrong, can't find the executable, putting container into sleep mode!---"
+  sleep infinity
+else
+  tmux new-session -d -s BeamMP-Server /beamngmp/BeamMP-Server ${GAME_PARAMS}
+  if [ ! -f ${DATA_DIR}/Server.log ]; then
+    ${DATA_DIR}/Server.log
+  fi
+  sleep 2
+  /opt/scripts/start-watchdog.sh &
+  tail -n 9999 -f ${DATA_DIR}/Server.log
+fi
