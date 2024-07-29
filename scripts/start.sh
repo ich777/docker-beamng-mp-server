@@ -11,11 +11,11 @@ cp -f /opt/custom/user.sh /opt/scripts/start-user.sh > /dev/null 2>&1 ||:
 cp -f /opt/scripts/user.sh /opt/scripts/start-user.sh > /dev/null 2>&1 ||:
 
 if [ -f /opt/scripts/start-user.sh ]; then
-    echo "---Found optional script, executing---"
-    chmod -f +x /opt/scripts/start-user.sh ||:
-    /opt/scripts/start-user.sh || echo "---Optional Script has thrown an Error---"
+  echo "---Found optional script, executing---"
+  chmod -f +x /opt/scripts/start-user.sh ||:
+  /opt/scripts/start-user.sh || echo "---Optional Script has thrown an Error---"
 else
-    echo "---No optional script found, continuing---"
+  echo "---No optional script found, continuing---"
 fi
 
 echo "---Starting...---"
@@ -24,10 +24,10 @@ chmod -R 750 /opt/scripts
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
-	kill -SIGKILL $(pidof BeamMP-Server)
-	tail --pid=$(pidof BeamMP-Server) -f 2>/dev/null
-	sleep 0.5
-	exit 143;
+  su $USER -c "tmux send-keys -t BeamMP-Server \"exit\" C-m"
+  tail --pid=$(pidof BeamMP-Server) -f 2>/dev/null
+  sleep 0.5
+  exit 143;
 }
 
 trap 'kill ${!}; term_handler' SIGTERM
