@@ -49,12 +49,6 @@ elif [ "${CUR_V}" == "${LAT_V}" ]; then
 fi
 
 echo "---Prepare Server---"
-if [ ! -f ~/.tmux.conf ]; then
-  echo "set-option -g status off
-set-option -g display-time 5000
-unbind -n C-c
-bind-key -n C-c display-message 'Blocked. Please use to command \"exit\" to shutdown the server or close this window to exit the terminal.'" > ~/.tmux.conf
-fi
 if [ ! -f "${DATA_DIR}/ServerConfig.toml" ]; then
   echo "---No ServerConfig.toml found, copying...---"
   cp -f /opt/config/ServerConfig.toml ${DATA_DIR}
@@ -62,19 +56,26 @@ fi
 chmod -R ${DATA_PERM} ${DATA_DIR}
 
 echo "---Start Server---"
-if [ "${ENABLE_WEBCONSOLE}" == "true" ]; then
-    /opt/scripts/start-gotty.sh 2>/dev/null &
-fi
 cd ${DATA_DIR}
 if [ ! -f ${DATA_DIR}/BeamMP-Server ]; then
   echo "---Something went wrong, can't find the executable, putting container into sleep mode!---"
   sleep infinity
 else
-  tmux new-session -d -s BeamMP-Server /beamngmp/BeamMP-Server ${GAME_PARAMS}
-  if [ ! -f ${DATA_DIR}/Server.log ]; then
-    ${DATA_DIR}/Server.log
+  if [ "${ENABLE_WEBMANAGER}" == "true" ]; then
+    cd ${DATA_DIR}
+    tmux new-session -d -s BeamMP-Server ${DATA_DIR}/BeamMP-Server ${GAME_PARAMS}
+    /usr/bin/beammp-webmanager \
+      -addr 0.0.0.0:8080 \
+      -no-browser \
+      -tmux \
+      -dockerrestart 2>/dev/null 2>&1 &
+  else
+    /beamngmp/BeamMP-Server ${GAME_PARAMS}
   fi
   sleep 2
+  if [ ! -f ${DATA_DIR}/Server.log ]; then
+    touch ${DATA_DIR}/Server.log
+  fi
   /opt/scripts/start-watchdog.sh &
   tail -n 9999 -f ${DATA_DIR}/Server.log
 fi
